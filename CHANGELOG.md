@@ -26,4 +26,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - User overview
 - Repository overview
 
-[Unreleased]: https://github.com/michenriksen/gitrob/compare/v2.0.0-beta...HEAD
+[Unreleased]: https://github.com/bitthr3at/gitrob/compare/v2.0.0-beta...HEAD

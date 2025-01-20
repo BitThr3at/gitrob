@@ -1,7 +1,7 @@
 # 🕵️ Gitrob
 
 <p align="center">
-  <img src="https://github.com/michenriksen/gitrob/raw/master/static/images/gopher_full.png" alt="Gitrob" width="200" />
+  <img src="https://github.com/bitthr3at/gitrob/raw/master/static/images/gopher_full.png" alt="Gitrob" width="200" />
 </p>
 
 <div align="center">
@@ -35,11 +35,11 @@
 ## 📥 Installation
 
 ### Pre-built Binaries
-Download the latest [pre-built release](https://github.com/michenriksen/gitrob/releases) for your platform.
+Download the latest [pre-built release](https://github.com/bitthr3at/gitrob/releases) for your platform.
 
 ### Using Go
 ```bash
-go get github.com/michenriksen/gitrob
+go get github.com/bitthr3at/gitrob
 ```
 
 ## 🚀 Quick Start
@@ -126,7 +126,7 @@ gitrob -load ~/gitrob-session.json
 ### Build Steps
 1. **Clone Repository**
 ```bash
-git clone https://github.com/michenriksen/gitrob.git
+git clone https://github.com/bitthr3at/gitrob.git
 cd gitrob
 ```
 

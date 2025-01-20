@@ -13,7 +13,7 @@ build_for_platform() {
     local OUTPUT=$3
     
     echo "Building for $GOOS/$GOARCH..."
-    GOOS=$GOOS GOARCH=$GOARCH go build -o "$BUILD_DIR/$OUTPUT" -ldflags "-X github.com/michenriksen/gitrob/core.Version=$VERSION"
+    GOOS=$GOOS GOARCH=$GOARCH go build -o "$BUILD_DIR/$OUTPUT" -ldflags "-X github.com/bitthr3at/gitrob/core.Version=$VERSION"
 }
 
 # Clean previous builds
