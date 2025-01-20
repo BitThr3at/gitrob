@@ -69,19 +69,44 @@ export GITROB_ACCESS_TOKEN=your_token_here
 ```
 
 ### Signature Configuration
-Place your `config.yaml` in one of these locations:
-- `./config.yaml`
-- `./core/config.yaml`
-- `/etc/gitrob/config.yaml`
-- `$HOME/.gitrob/config.yaml`
+Gitrob uses YAML configuration files to define signature patterns for detecting sensitive information. You can specify a custom config file or use the default locations.
+
+#### Using Custom Config File
+```bash
+gitrob -config /path/to/your/config.yaml target_organization
+```
+
+#### Default Config Locations
+If no config file is specified, Gitrob searches in these locations (in order):
+1. `./config.yaml` (Current directory)
+2. `./core/config.yaml` (Core directory)
+3. `/etc/gitrob/config.yaml` (System config)
+4. `$HOME/.gitrob/config.yaml` (User config)
 
 #### Custom Signature Format
 ```yaml
-- name: "sensitive_file"
-  type: "content|extension|filename"
-  pattern: "regex_pattern"
-  description: "What this detects"
-  comment: "Additional context"
+patterns:
+  - name: "sensitive_file"
+    type: "content|extension|filename|path"
+    pattern: "regex_pattern"
+    description: "What this detects"
+    comment: "Additional context"
+```
+
+Signature Types:
+- `content`: Match file contents using regex
+- `extension`: Match file extensions (exact match)
+- `filename`: Match filenames (exact match)
+- `path`: Match file paths using regex
+
+Example:
+```yaml
+patterns:
+  - name: "aws_key"
+    type: "content"
+    pattern: "(?i)aws_access_key_id\\s*=\\s*[A-Z0-9]{20}"
+    description: "AWS Access Key ID"
+    comment: "AWS credentials should not be committed"
 ```
 
 ## 🛠️ Usage
@@ -96,11 +121,13 @@ gitrob [options] target [target2] ... [targetN]
 |--------|-------------|---------|
 | -bind-address | Web server bind address | 127.0.0.1 |
 | -commit-depth | Number of commits to process | 500 |
+| -config | Path to config.yaml file | core/config.yaml |
 | -debug | Enable debug output | false |
 | -github-access-token | GitHub API token | - |
 | -load | Load session file | - |
 | -no-expand-orgs | Don't scan org members | false |
 | -port | Web server port | 9393 |
+| -repo | Single repository to scan | - |
 | -save | Save session to file | - |
 | -silent | Suppress output | false |
 | -threads | Concurrent threads | CPU cores |

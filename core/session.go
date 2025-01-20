@@ -160,6 +160,18 @@ func (s *Session) InitRouter() {
 }
 
 func (s *Session) InitSignatures() {
+	// First try the config path from command line argument
+	if *s.Options.ConfigPath != "" {
+		config, err := LoadConfig(*s.Options.ConfigPath)
+		if err == nil {
+			// Convert config patterns to signatures
+			Signatures = config.ConvertToSignatures()
+			s.Out.Debug("Loaded %d signatures from %s\n", len(Signatures), *s.Options.ConfigPath)
+			return
+		}
+		s.Out.Error("Failed to load config from %s: %s\n", *s.Options.ConfigPath, err)
+	}
+
 	// Try to load from config file in multiple locations
 	configPaths := []string{
 		"config.yaml",                             // Current directory

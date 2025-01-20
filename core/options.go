@@ -17,6 +17,7 @@ type Options struct {
 	Debug             *bool
 	Logins            []string
 	RepoURL           *string // Single repository URL to scan
+	ConfigPath        *string // Path to config.yaml file
 }
 
 func ParseOptions() (Options, error) {
@@ -32,6 +33,7 @@ func ParseOptions() (Options, error) {
 		Silent:            flag.Bool("silent", false, "Suppress all output except for errors"),
 		Debug:             flag.Bool("debug", false, "Print debugging information"),
 		RepoURL:           flag.String("repo", "", "Single GitHub repository URL to scan (e.g. 'owner/repo')"),
+		ConfigPath:        flag.String("config", "core/config.yaml", "Path to config.yaml file"),
 	}
 
 	flag.Parse()
