@@ -1,6 +1,8 @@
-module github.com/michenriksen/gitrob
+module github.com/BitThr3at/gitrob
 
-go 1.23.3
+go 1.21.0
+
+toolchain go1.23.3
 
 require (
 	github.com/elazarl/go-bindata-assetfs v1.0.1
@@ -11,6 +13,7 @@ require (
 	github.com/google/go-github v17.0.0+incompatible
 	golang.org/x/oauth2 v0.25.0
 	gopkg.in/src-d/go-git.v4 v4.13.1
+	gopkg.in/yaml.v2 v2.4.0
 )
 
 require (
@@ -28,7 +31,6 @@ require (
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/jteeuwen/go-bindata v3.0.7+incompatible // indirect
 	github.com/kevinburke/ssh_config v0.0.0-20190725054713-01f96b0aa0cd // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
@@ -51,6 +53,5 @@ require (
 	google.golang.org/protobuf v1.36.1 // indirect
 	gopkg.in/src-d/go-billy.v4 v4.3.2 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
