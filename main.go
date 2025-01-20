@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/bitthr3at/gitrob/core"
+	"github.com/BitThr3at/gitrob/core"
 )
 
 var (

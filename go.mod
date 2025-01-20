@@ -1,4 +1,4 @@
-module github.com/bitthr3at/gitrob
+module github.com/BitThr3at/gitrob
 
 go 1.21.0
 
