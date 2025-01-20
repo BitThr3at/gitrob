@@ -1,0 +1,625 @@
+# Secret Detection Patterns Configuration
+
+patterns:
+  - name: test
+    type: content
+    pattern: '(?i)test'
+    description: test
+    comment: test
+  # Cryptographic Keys and Certificates
+  - name: pem_key
+    type: extension
+    pattern: '.pem'
+    description: Potential cryptographic private key
+    comment: Private keys should not be exposed
+
+  - name: pkcs12_key
+    type: extension
+    pattern: '.pkcs12'
+    description: Potential cryptographic key bundle
+    comment: Contains sensitive cryptographic material
+
+  - name: p12_key
+    type: extension
+    pattern: '.p12'
+    description: Potential cryptographic key bundle
+    comment: Contains sensitive cryptographic material
+
+  - name: pfx_key
+    type: extension
+    pattern: '.pfx'
+    description: Potential cryptographic key bundle
+    comment: Contains sensitive cryptographic material
+
+  - name: asc_key
+    type: extension
+    pattern: '.asc'
+    description: Potential cryptographic key bundle
+    comment: Contains sensitive cryptographic material
+
+  - name: jks_key
+    type: extension
+    pattern: '.jks'
+    description: Java keystore file
+    comment: Contains cryptographic keys and certificates
+
+  # Log Files
+  - name: log_file
+    type: extension
+    pattern: '.log'
+    description: Log file
+    comment: Log files can contain secret HTTP endpoints, session IDs, API keys and other goodies
+
+  # Chat and Communication
+  - name: otr_private_key
+    type: filename
+    pattern: 'otr.private_key'
+    description: Pidgin OTR private key
+    comment: Contains chat encryption keys
+
+  # VPN and Remote Access
+  - name: ovpn_config
+    type: extension
+    pattern: '.ovpn'
+    description: OpenVPN client configuration file
+    comment: Contains VPN configuration and possibly certificates
+
+  - name: rdp_file
+    type: extension
+    pattern: '.rdp'
+    description: Remote Desktop connection file
+    comment: Contains remote desktop credentials
+
+  - name: tunnelblick_config
+    type: extension
+    pattern: '.tblk'
+    description: Tunnelblick VPN configuration file
+    comment: Contains VPN configuration and certificates
+
+  # Cloud Services
+  - name: azure_config
+    type: extension
+    pattern: '.cscfg'
+    description: Azure service configuration schema file
+    comment: May contain Azure service credentials
+
+  # Database Files
+  - name: mssql_db
+    type: extension
+    pattern: '.mdf'
+    description: Microsoft SQL database file
+    comment: Database files may contain sensitive data
+
+  - name: mssql_compact_db
+    type: extension
+    pattern: '.sdf'
+    description: Microsoft SQL server compact database file
+    comment: Database files may contain sensitive data
+
+  - name: sqlite_db
+    type: extension
+    pattern: '.sqlite'
+    description: SQLite database file
+    comment: Database files may contain sensitive data
+
+  # Encryption and Security
+  - name: bitlocker_recovery
+    type: extension
+    pattern: '.bek'
+    description: Microsoft BitLocker recovery key file
+    comment: Contains disk encryption recovery keys
+
+  - name: bitlocker_tpm
+    type: extension
+    pattern: '.tpm'
+    description: Microsoft BitLocker Trusted Platform Module password file
+    comment: Contains BitLocker TPM passwords
+
+  - name: bitlocker_encrypted
+    type: extension
+    pattern: '.fve'
+    description: Windows BitLocker full volume encrypted data file
+    comment: Contains encrypted volume data
+
+  # Password Managers and Secure Storage
+  - name: password_safe
+    type: extension
+    pattern: '.psafe3'
+    description: Password Safe database file
+    comment: Contains encrypted passwords
+
+  - name: onepassword_db
+    type: extension
+    pattern: '.agilekeychain'
+    description: 1Password password manager database file
+    comment: Feed it to Hashcat and see if you're lucky
+
+  - name: apple_keychain
+    type: extension
+    pattern: '.keychain'
+    description: Apple Keychain database file
+    comment: Contains encrypted credentials and certificates
+
+  - name: kde_wallet
+    type: extension
+    pattern: '.kwallet'
+    description: KDE Wallet Manager database file
+    comment: Contains encrypted credentials
+
+  # Network Analysis
+  - name: network_traffic
+    type: extension
+    pattern: '.pcap'
+    description: Network traffic capture file
+    comment: May contain sensitive network traffic data
+
+  # Financial Data
+  - name: gnucash_file
+    type: extension
+    pattern: '.gnucash'
+    description: GnuCash database file
+    comment: Contains financial data and possibly credentials
+
+  # CI/CD Configuration
+  - name: jenkins_ssh_config
+    type: filename
+    pattern: 'jenkins.plugins.publish_over_ssh.BapSshPublisherPlugin.xml'
+    description: Jenkins publish over SSH plugin file
+    comment: Contains SSH credentials for Jenkins deployments
+
+  - name: jenkins_credentials
+    type: filename
+    pattern: 'credentials.xml'
+    description: Potential Jenkins credentials file
+    comment: Contains Jenkins service credentials
+
+  # Web Applications
+  - name: mediawiki_config
+    type: filename
+    pattern: 'LocalSettings.php'
+    description: Potential MediaWiki configuration file
+    comment: Contains database and wiki configuration
+
+  - name: rails_secret_token
+    type: filename
+    pattern: 'secret_token.rb'
+    description: Ruby On Rails secret token configuration file
+    comment: If the Rails secret token is known, it can allow for remote code execution (http://www.exploit-db.com/exploits/27527/)
+
+  - name: carrierwave_config
+    type: filename
+    pattern: 'carrierwave.rb'
+    description: Carrierwave configuration file
+    comment: Can contain credentials for cloud storage systems such as Amazon S3 and Google Storage
+
+  - name: rails_database
+    type: filename
+    pattern: 'database.yml'
+    description: Potential Ruby On Rails database configuration file
+    comment: Can contain database credentials
+
+  - name: omniauth_config
+    type: filename
+    pattern: 'omniauth.rb'
+    description: OmniAuth configuration file
+    comment: The OmniAuth configuration file can contain client application secrets
+
+  - name: django_settings
+    type: filename
+    pattern: 'settings.py'
+    description: Django configuration file
+    comment: Can contain database credentials, cloud storage system credentials, and other secrets
+
+  # Database Tools
+  - name: sequel_pro_favorites
+    type: filename
+    pattern: 'Favorites.plist'
+    description: Sequel Pro MySQL database manager bookmark file
+    comment: Contains database connection information
+
+  # Firewall Configuration
+  - name: little_snitch_config
+    type: filename
+    pattern: 'configuration.user.xpl'
+    description: Little Snitch firewall configuration file
+    comment: Contains traffic rules for applications
+
+  # Personal Data
+  - name: day_one_journal
+    type: extension
+    pattern: '.dayone'
+    description: Day One journal file
+    comment: Contains personal journal entries
+
+  - name: jrnl_file
+    type: filename
+    pattern: 'journal.txt'
+    description: Potential jrnl journal file
+    comment: Contains personal journal entries
+
+  # Configuration Management
+  - name: chef_knife_config
+    type: filename
+    pattern: 'knife.rb'
+    description: Chef Knife configuration file
+    comment: Can contain references to Chef servers
+
+  # FTP and Server Configuration
+  - name: proftpd_passwd
+    type: filename
+    pattern: 'proftpdpasswd'
+    description: cPanel backup ProFTPd credentials file
+    comment: Contains usernames and password hashes for FTP accounts
+
+  - name: filezilla_config
+    type: filename
+    pattern: 'filezilla.xml'
+    description: FileZilla FTP configuration file
+    comment: Can contain credentials for FTP servers
+
+  - name: filezilla_recent
+    type: filename
+    pattern: 'recentservers.xml'
+    description: FileZilla FTP recent servers file
+    comment: Can contain credentials for FTP servers
+
+  - name: sftp_config
+    type: filename
+    pattern: '^sftp-config(\.json)?$'
+    description: SFTP connection configuration file
+    comment: Contains SFTP credentials
+
+  # Game Server Configuration
+  - name: ventrilo_config
+    type: filename
+    pattern: 'ventrilo_srv.ini'
+    description: Ventrilo server configuration file
+    comment: Can contain passwords
+
+  # Infrastructure as Code
+  - name: terraform_vars
+    type: filename
+    pattern: 'terraform.tfvars'
+    description: Terraform variable config file
+    comment: Can contain credentials for terraform providers
+
+  # Shell Configuration
+  - name: shell_exports
+    type: filename
+    pattern: '.exports'
+    description: Shell configuration file
+    comment: Shell configuration files can contain passwords, API keys, hostnames and other goodies
+
+  - name: shell_functions
+    type: filename
+    pattern: '.functions'
+    description: Shell configuration file
+    comment: Shell configuration files can contain passwords, API keys, hostnames and other goodies
+
+  - name: shell_extra
+    type: filename
+    pattern: '.extra'
+    description: Shell configuration file
+    comment: Shell configuration files can contain passwords, API keys, hostnames and other goodies
+
+  - name: shell_rc
+    type: filename
+    pattern: '^\.?(bash|zsh|csh)rc$'
+    description: Shell configuration file
+    comment: Shell configuration files can contain passwords, API keys, hostnames and other goodies
+
+  - name: shell_profile
+    type: filename
+    pattern: '^\.?(bash_|zsh_)?profile$'
+    description: Shell profile configuration file
+    comment: Shell configuration files can contain passwords, API keys, hostnames and other goodies
+
+  - name: shell_aliases
+    type: filename
+    pattern: '^\.?(bash_|zsh_)?aliases$'
+    description: Shell command alias configuration file
+    comment: Shell configuration files can contain passwords, API keys, hostnames and other goodies
+
+  # SSH Keys and Config
+  - name: ssh_rsa_key
+    type: filename
+    pattern: '^.*_rsa$'
+    description: Private SSH key
+    comment: Private SSH keys should not be exposed
+
+  - name: ssh_dsa_key
+    type: filename
+    pattern: '^.*_dsa$'
+    description: Private SSH key
+    comment: Private SSH keys should not be exposed
+
+  - name: ssh_ed25519_key
+    type: filename
+    pattern: '^.*_ed25519$'
+    description: Private SSH key
+    comment: Private SSH keys should not be exposed
+
+  - name: ssh_ecdsa_key
+    type: filename
+    pattern: '^.*_ecdsa$'
+    description: Private SSH key
+    comment: Private SSH keys should not be exposed
+
+  - name: ssh_config
+    type: path
+    pattern: '\.?ssh/config$'
+    description: SSH configuration file
+    comment: SSH configuration files may contain sensitive information
+
+  # Generic Key Files
+  - name: key_pair
+    type: extension
+    pattern: '^key(pair)?$'
+    description: Potential cryptographic private key
+    comment: May contain sensitive cryptographic material
+
+  # Command History
+  - name: shell_history
+    type: filename
+    pattern: '^\.?(bash_|zsh_|sh_|z)?history$'
+    description: Shell command history file
+    comment: May contain sensitive commands and credentials
+
+  - name: mysql_history
+    type: filename
+    pattern: '^\.?mysql_history$'
+    description: MySQL client command history file
+    comment: May contain database credentials
+
+  - name: psql_history
+    type: filename
+    pattern: '^\.?psql_history$'
+    description: PostgreSQL client command history file
+    comment: May contain database credentials
+
+  - name: irb_history
+    type: filename
+    pattern: '^\.?irb_history$'
+    description: Ruby IRB console history file
+    comment: May contain sensitive development data
+
+  # Database Configuration
+  - name: pgpass
+    type: filename
+    pattern: '^\.?pgpass$'
+    description: PostgreSQL password file
+    comment: Contains database credentials
+
+  - name: dbeaver_datasources
+    type: filename
+    pattern: '^\.?dbeaver-data-sources.xml$'
+    description: DBeaver SQL database manager configuration file
+    comment: Contains database connection credentials
+
+  - name: robomongo_config
+    type: filename
+    pattern: 'robomongo.json'
+    description: Robomongo MongoDB manager configuration file
+    comment: Can contain credentials for MongoDB databases
+
+  # Chat and Communication
+  - name: pidgin_accounts
+    type: path
+    pattern: '\.?purple/accounts\.xml$'
+    description: Pidgin chat client account configuration file
+    comment: Contains chat account credentials
+
+  - name: xchat_config
+    type: path
+    pattern: '\.?xchat2?/servlist_?\.conf$'
+    description: Hexchat/XChat IRC client server list configuration file
+    comment: Contains IRC server credentials
+
+  - name: irssi_config
+    type: path
+    pattern: '\.?irssi/config$'
+    description: Irssi IRC client configuration file
+    comment: Contains IRC network credentials
+
+  - name: mutt_config
+    type: filename
+    pattern: '^\.?muttrc$'
+    description: Mutt e-mail client configuration file
+    comment: May contain email account credentials
+
+  # Cloud Services
+  - name: s3cmd_config
+    type: filename
+    pattern: '^\.?s3cfg$'
+    description: S3cmd configuration file
+    comment: Contains AWS S3 credentials
+
+  - name: aws_credentials
+    type: path
+    pattern: '\.?aws/credentials$'
+    description: AWS CLI credentials file
+    comment: Contains AWS access credentials
+
+  # Social Media
+  - name: twitter_cli_config
+    type: filename
+    pattern: '^\.?trc$'
+    description: T command-line Twitter client configuration file
+    comment: Contains Twitter API credentials
+
+  # Security Tools
+  - name: recon_ng_keys
+    type: path
+    pattern: '\.?recon-ng/keys\.db$'
+    description: Recon-ng web reconnaissance framework API key database
+    comment: Contains various API keys for web services
+
+  # Application Configuration
+  - name: gitrob_config
+    type: filename
+    pattern: '^\.?gitrobrc$'
+    description: Gitrob configuration file
+    comment: May contain sensitive configuration data
+
+  # Web Server Configuration
+  - name: php_config
+    type: filename
+    pattern: 'config(\.inc)?\.php$'
+    description: PHP configuration file
+    comment: May contain sensitive configuration data
+
+  - name: htpasswd
+    type: filename
+    pattern: '^\.?htpasswd$'
+    description: Apache htpasswd file
+    comment: Contains web server authentication credentials
+
+  # Password Managers
+  - name: gnome_keyring
+    type: extension
+    pattern: '^key(store|ring)$'
+    description: GNOME Keyring database file
+    comment: Contains encrypted credentials
+
+  - name: keepass_db
+    type: extension
+    pattern: '^kdbx?$'
+    description: KeePass password manager database file
+    comment: Feed it to Hashcat and see if you're lucky
+
+  # Database Files
+  - name: sql_dump
+    type: extension
+    pattern: '^sql(dump)?$'
+    description: SQL dump file
+    comment: May contain database structure and data
+
+  # Authentication Files
+  - name: netrc
+    type: filename
+    pattern: '^(\.|_)?netrc$'
+    description: Configuration file for auto-login process
+    comment: Can contain username and password
+
+  # Package Management
+  - name: rubygems_credentials
+    type: path
+    pattern: '\.?gem/credentials$'
+    description: Rubygems credentials file
+    comment: Can contain API key for a rubygems.org account
+
+  - name: npmrc
+    type: filename
+    pattern: '^\.?npmrc$'
+    description: NPM configuration file
+    comment: Can contain credentials for NPM registries
+
+  # Cloud Provider Tools
+  - name: tugboat_config
+    type: filename
+    pattern: '^\.?tugboat$'
+    description: Tugboat DigitalOcean management tool configuration
+    comment: Contains DigitalOcean access credentials
+
+  - name: doctl_config
+    type: path
+    pattern: 'doctl/config.yaml$'
+    description: DigitalOcean doctl command-line client configuration file
+    comment: Contains DigitalOcean API key and other information
+
+  # Version Control
+  - name: git_credentials
+    type: filename
+    pattern: '^\.?git-credentials$'
+    description: git-credential-store helper credentials file
+    comment: Contains Git authentication credentials
+
+  - name: github_hub_config
+    type: path
+    pattern: 'config/hub$'
+    description: GitHub Hub command-line client configuration file
+    comment: Can contain GitHub API access token
+
+  - name: gitconfig
+    type: filename
+    pattern: '^\.?gitconfig$'
+    description: Git configuration file
+    comment: May contain sensitive configuration data
+
+  # Configuration Management
+  - name: chef_key
+    type: path
+    pattern: '\.?chef/(.*)\.pem$'
+    description: Chef private key
+    comment: Can be used to authenticate against Chef servers
+
+  # System Files
+  - name: shadow_file
+    type: path
+    pattern: 'etc/shadow$'
+    description: Potential Linux shadow file
+    comment: Contains hashed passwords for system users
+
+  - name: passwd_file
+    type: path
+    pattern: 'etc/passwd$'
+    description: Potential Linux passwd file
+    comment: Contains system user information
+
+  # Container Configuration
+  - name: docker_config
+    type: filename
+    pattern: '^\.?dockercfg$'
+    description: Docker configuration file
+    comment: Can contain credentials for public or private Docker registries
+
+  # Environment Files
+  - name: env_file
+    type: filename
+    pattern: '^\.?env$'
+    description: Environment configuration file
+    comment: Contains environment variables which may include secrets
+
+  # Generic Patterns
+  - name: credential_keyword
+    type: path
+    pattern: 'credential'
+    description: Contains word credential
+    comment: Files containing 'credential' in name may contain sensitive data
+
+  - name: password_keyword
+    type: path
+    pattern: 'password'
+    description: Contains word password
+    comment: Files containing 'password' in name may contain sensitive data
+
+  # AWS Credentials Content
+  - name: aws_access_key_content
+    type: content
+    pattern: '(?i)aws_access_key_id\s*=\s*[A-Z0-9]{20}'
+    description: AWS Access Key ID found
+    comment: AWS credentials should not be committed to version control
+
+  - name: aws_secret_access_key_content
+    type: content
+    pattern: '(?i)aws[_\-]?(secret[_\-]?)?access[_\-]?key[_\-]?id[\s]*[:=]+[\s]*[A-Za-z0-9/+=]{40}'
+    description: AWS Secret Access Key found
+    comment: AWS credentials should not be committed to version control
+
+  - name: aws_secret_key_content
+    type: content
+    pattern: '(?i)aws[_\-]?secret[_\-]?key[\s]*[:=]+[\s]*[A-Za-z0-9/+=]{40}'
+    description: AWS Secret Key found
+    comment: AWS credentials should not be committed to version control
+
+  - name: generic_secret_content
+    type: content
+    pattern: '[A-Za-z0-9/+=]{40}'
+    description: Potential AWS Secret Key found
+    comment: Possible AWS secret key or other sensitive data
+
+  - name: aws_key_pattern_content
+    type: content
+    pattern: '(?i)(AKIA|A3T|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}'
+    description: AWS Access Key ID found in content
+    comment: AWS credentials should not be committed to version control

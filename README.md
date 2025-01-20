@@ -1,73 +1,159 @@
+# 🕵️ Gitrob
+
 <p align="center">
   <img src="https://github.com/michenriksen/gitrob/raw/master/static/images/gopher_full.png" alt="Gitrob" width="200" />
 </p>
-<br />
-<br />
-<br />
 
-# Gitrob: Putting the Open Source in OSINT
+<div align="center">
 
-Gitrob is a tool to help find potentially sensitive files pushed to public repositories on Github. Gitrob will clone repositories belonging to a user or organization down to a configurable depth and iterate through the commit history and flag files that match signatures for potentially sensitive files. The findings will be presented through a web interface for easy browsing and analysis.
+[![Go Version](https://img.shields.io/badge/Go-%3E%3D%201.8-blue.svg)](https://golang.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-## Usage
+</div>
 
-    gitrob [options] target [target2] ... [targetN]
+> Gitrob is a tool to help find potentially sensitive files pushed to public repositories on Github.
+
+## 📋 Table of Contents
+- [Features](#-features)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+- [Configuration](#-configuration)
+- [Usage](#-usage)
+- [Building from Source](#-building-from-source)
+- [Contributing](#-contributing)
+
+## ✨ Features
+- 🔍 Scans repositories for sensitive files
+- 🌐 Web interface for easy analysis
+- 🔄 Configurable commit depth scanning
+- 👥 Organization member scanning
+- 💾 Session saving and loading
+- ⚙️ Customizable signature patterns
+- 🚀 Multi-threaded processing
+
+## 📥 Installation
+
+### Pre-built Binaries
+Download the latest [pre-built release](https://github.com/michenriksen/gitrob/releases) for your platform.
+
+### Using Go
+```bash
+go get github.com/michenriksen/gitrob
+```
+
+## 🚀 Quick Start
+
+1. **Set up GitHub Token**
+```bash
+export GITROB_ACCESS_TOKEN=your_github_token
+```
+
+2. **Run Gitrob**
+```bash
+gitrob target_organization
+```
+
+3. **Access Web Interface**
+```
+http://localhost:9393
+```
+
+## ⚙️ Configuration
+
+### GitHub Access Token
+1. [Create a personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/)
+2. Set it in your environment:
+```bash
+export GITROB_ACCESS_TOKEN=your_token_here
+```
+
+### Signature Configuration
+Place your `config.yaml` in one of these locations:
+- `./config.yaml`
+- `./core/config.yaml`
+- `/etc/gitrob/config.yaml`
+- `$HOME/.gitrob/config.yaml`
+
+#### Custom Signature Format
+```yaml
+- name: "sensitive_file"
+  type: "content|extension|filename"
+  pattern: "regex_pattern"
+  description: "What this detects"
+  comment: "Additional context"
+```
+
+## 🛠️ Usage
+
+### Command Format
+```bash
+gitrob [options] target [target2] ... [targetN]
+```
 
 ### Options
+| Option | Description | Default |
+|--------|-------------|---------|
+| -bind-address | Web server bind address | 127.0.0.1 |
+| -commit-depth | Number of commits to process | 500 |
+| -debug | Enable debug output | false |
+| -github-access-token | GitHub API token | - |
+| -load | Load session file | - |
+| -no-expand-orgs | Don't scan org members | false |
+| -port | Web server port | 9393 |
+| -save | Save session to file | - |
+| -silent | Suppress output | false |
+| -threads | Concurrent threads | CPU cores |
 
-```
--bind-address string
-    Address to bind web server to (default "127.0.0.1")
--commit-depth int
-    Number of repository commits to process (default 500)
--debug
-    Print debugging information
--github-access-token string
-    GitHub access token to use for API requests
--load string
-    Load session file
--no-expand-orgs
-    Don't add members to targets when processing organizations
--port int
-    Port to run web server on (default 9393)
--save string
-    Save session to file
--silent
-    Suppress all output except for errors
--threads int
-    Number of concurrent threads (default number of logical CPUs)
+### Session Management
+
+#### Save Session
+```bash
+gitrob -save ~/gitrob-session.json acmecorp
 ```
 
-### Saving session to a file
+#### Load Session
+```bash
+gitrob -load ~/gitrob-session.json
+```
 
-By default, gitrob will store its state for an assessment in memory. This means that the results of an assessment is lost when Gitrob is closed. You can save the session to a file by using the `-save` option:
+## 🔨 Building from Source
 
-    gitrob -save ~/gitrob-session.json acmecorp
+### Prerequisites
+- Go >= 1.8
+- Git
 
-Gitrob will save all the gathered information to the specified file path as a special JSON document. The file can be loaded again for browsing at another point in time, shared with other analysts or parsed for custom integrations with other tools and systems.
+### Build Steps
+1. **Clone Repository**
+```bash
+git clone https://github.com/michenriksen/gitrob.git
+cd gitrob
+```
 
-### Loading session from a file
+2. **Build**
+```bash
+chmod +x build.sh
+./build.sh
+```
 
-A session stored in a file can be loaded with the `-load` option:
+This creates binaries in the `build` directory for:
+- Linux (amd64)
+- macOS (amd64)
+- Windows (amd64)
 
-    gitrob -load ~/gitrob-session.json
+For single platform build:
+```bash
+go build
+```
 
-Gitrob will start its web interface and serve the results for analysis.
+## 🤝 Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Installation
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
-A [precompiled version is available](https://github.com/michenriksen/gitrob/releases) for each release, alternatively you can use the latest version of the source code from this repository in order to build your own binary.
-
-Make sure you have a correctly configured **Go >= 1.8** environment and that `$GOPATH/bin` is in your `$PATH`
-
-    $ go get github.com/michenriksen/gitrob
-
-This command will download gitrob, install its dependencies, compile it and move the `gitrob` executable to `$GOPATH/bin`.
-
-### Github access token
-
-Gitrob will need a Github access token in order to interact with the Github API.  [Create a personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) and save it in an environment variable in your `.bashrc` or similar shell configuration file:
-
-    export GITROB_ACCESS_TOKEN=deadbeefdeadbeefdeadbeefdeadbeefdeadbeef
-
-Alternatively you can specify the access token with the `-github-access-token` option, but watch out for your command history!
+## 📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
