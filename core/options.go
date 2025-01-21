@@ -2,6 +2,7 @@ package core
 
 import (
 	"flag"
+	"fmt"
 )
 
 type Options struct {
@@ -33,11 +34,16 @@ func ParseOptions() (Options, error) {
 		Silent:            flag.Bool("silent", false, "Suppress all output except for errors"),
 		Debug:             flag.Bool("debug", false, "Print debugging information"),
 		RepoURL:           flag.String("repo", "", "Single GitHub repository URL to scan (e.g. 'owner/repo')"),
-		ConfigPath:        flag.String("config", "core/config.yaml", "Path to config.yaml file"),
+		ConfigPath:        flag.String("config", "", "Path to config.yaml file (required)"),
 	}
 
 	flag.Parse()
 	options.Logins = flag.Args()
+
+	// Validate required config file path
+	if *options.ConfigPath == "" {
+		return options, fmt.Errorf("config file path is required. Use -config flag to specify the path to config.yaml")
+	}
 
 	return options, nil
 }

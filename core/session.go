@@ -160,38 +160,15 @@ func (s *Session) InitRouter() {
 }
 
 func (s *Session) InitSignatures() {
-	// First try the config path from command line argument
-	if *s.Options.ConfigPath != "" {
-		config, err := LoadConfig(*s.Options.ConfigPath)
-		if err == nil {
-			// Convert config patterns to signatures
-			Signatures = config.ConvertToSignatures()
-			s.Out.Debug("Loaded %d signatures from %s\n", len(Signatures), *s.Options.ConfigPath)
-			return
-		}
-		s.Out.Error("Failed to load config from %s: %s\n", *s.Options.ConfigPath, err)
+	// Load config from the required config path
+	config, err := LoadConfig(*s.Options.ConfigPath)
+	if err != nil {
+		s.Out.Fatal("Failed to load config from %s: %s\n", *s.Options.ConfigPath, err)
 	}
 
-	// Try to load from config file in multiple locations
-	configPaths := []string{
-		"config.yaml",                             // Current directory
-		"core/config.yaml",                        // Core directory
-		"/etc/gitrob/config.yaml",                 // System config
-		os.ExpandEnv("$HOME/.gitrob/config.yaml"), // User config
-	}
-
-	for _, path := range configPaths {
-		config, err := LoadConfig(path)
-		if err == nil {
-			// Convert config patterns to signatures
-			Signatures = config.ConvertToSignatures()
-			s.Out.Debug("Loaded %d signatures from %s\n", len(Signatures), path)
-			return
-		}
-	}
-
-	// If no config file found, use default signatures
-	s.Out.Debug("No config file found, using default signatures\n")
+	// Convert config patterns to signatures
+	Signatures = config.ConvertToSignatures()
+	s.Out.Debug("Loaded %d signatures from %s\n", len(Signatures), *s.Options.ConfigPath)
 }
 
 func (s *Session) SaveToFile(location string) error {
