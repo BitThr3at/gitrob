@@ -113,6 +113,12 @@ func GetChangeContent(change *object.Change) ([]byte, error) {
 		return nil, nil
 	}
 
+	// Skip SVG files and other potentially problematic formats
+	path := GetChangePath(change)
+	if strings.HasSuffix(strings.ToLower(path), ".svg") {
+		return nil, nil
+	}
+
 	patch, err := change.Patch()
 	if err != nil {
 		return nil, err
@@ -123,6 +129,16 @@ func GetChangeContent(change *object.Change) ([]byte, error) {
 		if filePatch.IsBinary() {
 			continue
 		}
+
+		// Skip if total content size is too large (>1MB)
+		var totalSize int
+		for _, chunk := range filePatch.Chunks() {
+			totalSize += len(chunk.Content())
+			if totalSize > 1024*1024 {
+				return nil, nil
+			}
+		}
+
 		for _, chunk := range filePatch.Chunks() {
 			content.WriteString(chunk.Content())
 		}
