@@ -1,11 +1,11 @@
 # Secret Detection Patterns Configuration
 
 patterns:
-  - name: test
-    type: content
-    pattern: '(?i)test'
-    description: test
-    comment: test
+#  - name: test
+#    type: content
+#    pattern: '(?i)test'
+#    description: test
+#    comment: test
   # Cryptographic Keys and Certificates
   - name: pem_key
     type: extension
@@ -612,14 +612,14 @@ patterns:
     description: AWS Secret Key found
     comment: AWS credentials should not be committed to version control
 
-  - name: generic_secret_content
-    type: content
-    pattern: '[A-Za-z0-9/+=]{40}'
-    description: Potential AWS Secret Key found
-    comment: Possible AWS secret key or other sensitive data
+#  - name: generic_secret_content
+#    type: content
+#    pattern: '[A-Za-z0-9/+=]{40}'
+#    description: Potential AWS Secret Key found
+#    comment: Possible AWS secret key or other sensitive data
 
   - name: aws_key_pattern_content
     type: content
-    pattern: '(?i)(AKIA|A3T|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}'
+    pattern: '(AKIA|ASIA|ABIA)[A-Z0-9]{16}'
     description: AWS Access Key ID found in content
     comment: AWS credentials should not be committed to version control
