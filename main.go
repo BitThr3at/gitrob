@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -195,10 +196,16 @@ func AnalyzeRepositories(sess *core.Session) {
 
 						// Create a temporary file with the content for content-based signatures
 						if content != nil {
-							tempFile := path
+							tempDir, err := ioutil.TempDir("", "gitrob_content_")
+							if err != nil {
+								sess.Out.Debug("[THREAD #%d][%s] Error creating temp dir for %s: %s\n", tid, *repo.FullName, path, err)
+								continue
+							}
+							defer os.RemoveAll(tempDir) // Clean up temp dir when done
+
+							tempFile := filepath.Join(tempDir, filepath.Base(path))
 							if err := ioutil.WriteFile(tempFile, content, 0644); err == nil {
 								matchFile.Path = tempFile
-								defer os.Remove(tempFile)
 							}
 						}
 

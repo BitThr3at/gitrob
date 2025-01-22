@@ -3,6 +3,8 @@ package core
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"gopkg.in/src-d/go-git.v4"
@@ -18,10 +20,13 @@ const (
 func CloneRepository(url *string, branch *string, depth int) (*git.Repository, string, error) {
 	urlVal := *url
 	branchVal := *branch
-	dir, err := ioutil.TempDir("", "gitrob")
+
+	// Create temp directory with a more specific prefix
+	dir, err := ioutil.TempDir("", fmt.Sprintf("gitrob_repo_%s_", filepath.Base(urlVal)))
 	if err != nil {
-		return nil, "", err
+		return nil, "", fmt.Errorf("failed to create temp directory: %v", err)
 	}
+
 	repository, err := git.PlainClone(dir, false, &git.CloneOptions{
 		URL:           urlVal,
 		Depth:         depth,
@@ -29,9 +34,16 @@ func CloneRepository(url *string, branch *string, depth int) (*git.Repository, s
 		SingleBranch:  true,
 		Tags:          git.NoTags,
 	})
+
+	// If clone fails, clean up the directory
 	if err != nil {
-		return nil, dir, err
+		os.RemoveAll(dir)
+		if err.Error() == "remote repository is empty" {
+			return nil, "", err
+		}
+		return nil, "", fmt.Errorf("failed to clone repository: %v", err)
 	}
+
 	return repository, dir, nil
 }
 
