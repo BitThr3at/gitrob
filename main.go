@@ -268,6 +268,49 @@ func PrintSessionStats(sess *core.Session) {
 	sess.Out.Info("Targets.....: %d\n\n", sess.Stats.Targets)
 }
 
+// Add this new function to handle repo list
+func GatherTargetsFromRepoList(sess *core.Session) error {
+	// Read repo list file
+	content, err := ioutil.ReadFile(*sess.Options.RepoListFile)
+	if err != nil {
+		return fmt.Errorf("failed to read repo list file: %v", err)
+	}
+
+	// Split into lines and process each repo
+	repos := strings.Split(string(content), "\n")
+	for _, repoPath := range repos {
+		// Skip empty lines
+		repoPath = strings.TrimSpace(repoPath)
+		if repoPath == "" {
+			continue
+		}
+
+		// Split into owner/repo
+		parts := strings.Split(repoPath, "/")
+		if len(parts) != 2 {
+			sess.Out.Error("Invalid repository format for %s. Skipping. Use 'owner/repo' format\n", repoPath)
+			continue
+		}
+
+		owner := parts[0]
+		repoName := parts[1]
+
+		// Get the specific repository
+		repo, err := core.GetRepository(owner, repoName, sess.GithubClient)
+		if err != nil {
+			sess.Out.Error(" Error retrieving repository %s: %s\n", repoPath, err)
+			continue
+		}
+		sess.Out.Debug(" Retrieved repository: %s\n", *repo.FullName)
+		sess.AddRepository(repo)
+	}
+
+	if len(sess.Repositories) == 0 {
+		return fmt.Errorf("no valid repositories found in the list file")
+	}
+	return nil
+}
+
 func main() {
 	if sess, err = core.NewSession(); err != nil {
 		fmt.Println(err)
@@ -277,13 +320,23 @@ func main() {
 	sess.Out.Info("%s\n\n", core.ASCIIBanner)
 	sess.Out.Important("%s v%s started at %s\n", core.Name, core.Version, sess.Stats.StartedAt.Format(time.RFC3339))
 	sess.Out.Important("Loaded %d signatures\n", len(core.Signatures))
-	sess.Out.Important("Web interface available at http://%s:%d\n", *sess.Options.BindAddress, *sess.Options.Port)
+	if !*sess.Options.NoWebServer {
+		sess.Out.Important("Web interface available at http://%s:%d\n", *sess.Options.BindAddress, *sess.Options.Port)
+	}
 
 	if sess.Stats.Status == "finished" {
 		sess.Out.Important("Loaded session file: %s\n", *sess.Options.Load)
 	} else {
-		// Check if we're doing a repo scan or user/org scan
-		if *sess.Options.RepoURL != "" {
+		// Check which mode we're running in
+		if *sess.Options.RepoListFile != "" {
+			// Process repositories from list file
+			if err := GatherTargetsFromRepoList(sess); err != nil {
+				sess.Out.Fatal("%v\n", err)
+			}
+			// Skip GatherRepositories since we already have the specific repos
+			AnalyzeRepositories(sess)
+			sess.Finish()
+		} else if *sess.Options.RepoURL != "" {
 			GatherTargets(sess)
 			GatherRepositories(sess)
 			AnalyzeRepositories(sess)
@@ -294,7 +347,7 @@ func main() {
 			AnalyzeRepositories(sess)
 			sess.Finish()
 		} else {
-			sess.Out.Fatal("Please provide either a repository with -repo flag or at least one GitHub organization/user\n")
+			sess.Out.Fatal("Please provide either a repository with -repo flag, a repo list file with -repo-list, or at least one GitHub organization/user\n")
 		}
 
 		if *sess.Options.Save != "" {
@@ -307,6 +360,12 @@ func main() {
 	}
 
 	PrintSessionStats(sess)
-	sess.Out.Important("Press Ctrl+C to stop web server and exit.\n\n")
-	select {}
+
+	if *sess.Options.NoWebServer {
+		// Exit immediately if web server is disabled
+		os.Exit(0)
+	} else {
+		sess.Out.Important("Press Ctrl+C to stop web server and exit.\n\n")
+		select {}
+	}
 }

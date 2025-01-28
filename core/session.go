@@ -61,7 +61,9 @@ func (s *Session) Start() {
 	s.InitGithubAccessToken()
 	s.InitGithubClient()
 	s.InitSignatures()
-	s.InitRouter()
+	if !*s.Options.NoWebServer {
+		s.InitRouter()
+	}
 }
 
 func (s *Session) Finish() {

@@ -16,8 +16,10 @@ type Options struct {
 	Port              *int
 	Silent            *bool
 	Debug             *bool
+	NoWebServer       *bool // Flag to disable web server
 	Logins            []string
 	RepoURL           *string // Single repository URL to scan
+	RepoListFile      *string // Path to file containing list of repositories
 	ConfigPath        *string // Path to config.yaml file
 }
 
@@ -33,7 +35,9 @@ func ParseOptions() (Options, error) {
 		Port:              flag.Int("port", 9393, "Port to run web server on"),
 		Silent:            flag.Bool("silent", false, "Suppress all output except for errors"),
 		Debug:             flag.Bool("debug", false, "Print debugging information"),
+		NoWebServer:       flag.Bool("no-web", false, "Disable web interface"),
 		RepoURL:           flag.String("repo", "", "Single GitHub repository URL to scan (e.g. 'owner/repo')"),
+		RepoListFile:      flag.String("repo-list", "", "Path to file containing list of repositories (one per line in owner/repo format)"),
 		ConfigPath:        flag.String("config", "", "Path to config.yaml file (required)"),
 	}
 
